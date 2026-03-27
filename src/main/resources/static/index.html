@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Paldea - Loja de Plantas para Jardim. Encontre as melhores plantas ornamentais, aromáticas e suculentas.">
+    <title>Paldea | Plantas para Jardim</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <span class="logo">🌱 Paldea</span>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="crud.html">Gerenciar</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Bem-vindo à Paldea</h1>
+        <p>As melhores plantas para transformar o seu jardim. Qualidade, variedade e preços justos.</p>
+    </section>
+
+    <!-- Promoção — demonstra uso de IF -->
+    <div class="container">
+        <h2 class="section-title">Promoções</h2>
+
+        <!-- Este bloco é preenchido via JS com lógica condicional (IF) -->
+        <div id="promo-container">
+            <p style="color: var(--gray-500);">Carregando promoções...</p>
+        </div>
+
+        <p style="margin-top:2rem; font-size:.85rem; color:var(--gray-500);">
+            ℹ️ Esta seção demonstra <strong>exibição condicional (IF)</strong>: o conteúdo exibido muda conforme o estado da promoção retornado pela API.
+        </p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Paldea — Plantas para Jardim. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // ========================================================
+        // Demonstração de IF: exibe promoção ou mensagem padrão
+        // ========================================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('promo-container');
+
+            try {
+                const res = await fetch('/api/promocao');
+                const promo = await res.json();
+
+                // ---- IF condicional ----
+                if (promo.ativa) {
+                    container.innerHTML = `
+                        <div class="promo-banner">
+                            ${promo.mensagem}<br>
+                            <span style="font-size:.85rem;font-weight:400;">Desconto de ${promo.desconto}% aplicado automaticamente no catálogo.</span>
+                        </div>`;
+                } else {
+                    container.innerHTML = `
+                        <div class="promo-hidden">
+                            Nenhuma promoção ativa no momento. Fique de olho!
+                        </div>`;
+                }
+            } catch (err) {
+                container.innerHTML = `<div class="promo-hidden">Não foi possível carregar promoções.</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

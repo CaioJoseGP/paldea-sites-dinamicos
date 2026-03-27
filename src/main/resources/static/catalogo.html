@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Catálogo de plantas da Paldea. Veja todas as opções disponíveis para o seu jardim.">
+    <title>Catálogo | Paldea</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <span class="logo">🌱 Paldea</span>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="crud.html">Gerenciar</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 class="section-title">Catálogo de Plantas</h1>
+
+        <p style="margin-bottom:1.5rem; font-size:.85rem; color:var(--gray-500);">
+            ℹ️ Esta página demonstra <strong>exibição de lista (FOR)</strong>: os cards abaixo são renderizados dinamicamente usando <code>forEach</code>.
+        </p>
+
+        <!-- Preenchido dinamicamente com FOR -->
+        <div id="cards-container" class="cards-grid">
+            <p style="color: var(--gray-500);">Carregando plantas...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Paldea — Plantas para Jardim. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // ========================================================
+        // Demonstração de FOR: renderiza lista de plantas como cards
+        // ========================================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('cards-container');
+
+            try {
+                const res = await fetch('/api/plantas');
+                const plantas = await res.json();
+
+                container.innerHTML = '';
+
+                // ---- FOR (forEach) ----
+                plantas.forEach(planta => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <span class="categoria">${planta.categoria}</span>
+                        <h3>${planta.nome}</h3>
+                        <p>${planta.descricao}</p>
+                        <span class="preco">R$ ${planta.preco.toFixed(2)}</span>
+                    `;
+                    container.appendChild(card);
+                });
+
+                if (plantas.length === 0) {
+                    container.innerHTML = '<p style="color:var(--gray-500);">Nenhuma planta cadastrada.</p>';
+                }
+            } catch (err) {
+                container.innerHTML = '<p style="color:var(--red-500);">Erro ao carregar o catálogo.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
