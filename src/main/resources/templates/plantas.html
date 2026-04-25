@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Paldea Jardim - gestao de catalogo.">
+    <title>Paldea Jardim | Gestao</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body class="page-body">
+<header class="site-header">
+    <div class="site-header__inner">
+        <a class="brand" th:href="@{/ofertas}">
+            <span class="brand-mark">P</span>
+            <span class="brand-copy">
+                <strong>Paldea Jardim</strong>
+                <small>Botanica contemporanea</small>
+            </span>
+        </a>
+
+        <nav class="site-nav">
+            <a th:href="@{/ofertas}">Ofertas</a>
+            <a th:href="@{/catalogo}">Catalogo</a>
+            <a class="active" th:href="@{/plantas}">Gestao</a>
+        </nav>
+
+        <a class="header-login" th:href="@{/login}">Entrar</a>
+    </div>
+</header>
+
+<main class="page-main">
+    <section class="hero-frame hero-frame--studio shell">
+        <div class="hero-grid">
+            <div class="hero-display">
+                <span class="eyebrow">Operacao do catalogo</span>
+                <h1>Uma central de cadastro mais limpa, mais moderna e muito mais facil de operar.</h1>
+                <p class="hero-lead">
+                    Escolha a operacao desejada, preencha apenas os campos necessarios e envie a requisicao sem sair do
+                    mesmo painel.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn btn-primary" th:href="@{/catalogo}">Ver catalogo</a>
+                    <a class="btn btn-secondary" th:href="@{/ofertas}">Ver ofertas</a>
+                </div>
+            </div>
+
+            <aside class="hero-aside">
+                <div class="metric-card">
+                    <span class="metric-label">Cadastros ativos</span>
+                    <strong th:text="${plants.size()}">6</strong>
+                    <p>Todos os itens permanecem acessiveis em uma unica tela de operacao.</p>
+                </div>
+                <div class="metric-card metric-card--soft">
+                    <span class="metric-label">Fluxo</span>
+                    <strong>Unificado</strong>
+                    <p>Inserir, atualizar, buscar e apagar agora compartilham a mesma experiencia visual.</p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- Entrega 1 - CRUD: a tela abaixo concentra inserir, atualizar, buscar e apagar em um unico fluxo visual. -->
+    <section class="studio-grid shell">
+        <article class="studio-panel">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">Formulario inteligente</span>
+                    <h2>Escolha a operacao</h2>
+                </div>
+                <p>O painel ajusta os campos visiveis conforme a funcao selecionada.</p>
+            </div>
+
+            <div class="crud-switch" id="crudSwitch">
+                <button class="crud-mode" type="button" data-mode="inserir">Criar</button>
+                <button class="crud-mode" type="button" data-mode="atualizar">Atualizar</button>
+                <button class="crud-mode" type="button" data-mode="buscar">Buscar</button>
+                <button class="crud-mode" type="button" data-mode="apagar">Apagar</button>
+            </div>
+
+            <div class="mode-intro">
+                <h3 id="crudModeTitle">Cadastrar nova planta</h3>
+                <p id="crudModeDescription">
+                    Inclua um item na colecao com nome, categoria, valor e descricao comercial.
+                </p>
+            </div>
+
+            <form id="crudForm"
+                  class="crud-form"
+                  th:action="@{/plantas/inserir}"
+                  method="post"
+                  th:attr="data-initial-mode=${!#strings.isEmpty(searchId) ? 'buscar' : (!#strings.isEmpty(deleteId) ? 'apagar' : (!#strings.isEmpty(plantForm.id) ? 'atualizar' : 'inserir'))},
+                           data-endpoint-inserir=@{/plantas/inserir},
+                           data-endpoint-atualizar=@{/plantas/atualizar},
+                           data-endpoint-buscar=@{/plantas/buscar},
+                           data-endpoint-apagar=@{/plantas/apagar}">
+                <div class="form-grid">
+                    <div class="field-group field-group--compact" data-field="id">
+                        <label for="crudId">ID</label>
+                        <input id="crudId"
+                               type="number"
+                               name="id"
+                               th:value="${!#strings.isEmpty(plantForm.id) ? plantForm.id : (!#strings.isEmpty(searchId) ? searchId : deleteId)}"
+                               placeholder="Ex.: 3">
+                    </div>
+
+                    <div class="field-group" data-field="nome">
+                        <label for="crudNome">Nome</label>
+                        <input id="crudNome" type="text" name="nome" th:value="${plantForm.nome}" placeholder="Ex.: Orquidea Bamboo">
+                    </div>
+
+                    <div class="field-group" data-field="categoria">
+                        <label for="crudCategoria">Categoria</label>
+                        <select id="crudCategoria" name="categoria">
+                            <option value="">Selecione</option>
+                            <option value="Folhagem" th:selected="${plantForm.categoria == 'Folhagem'}">Folhagem</option>
+                            <option value="Flores" th:selected="${plantForm.categoria == 'Flores'}">Flores</option>
+                            <option value="Aromaticas" th:selected="${plantForm.categoria == 'Aromaticas'}">Aromaticas</option>
+                            <option value="Ervas" th:selected="${plantForm.categoria == 'Ervas'}">Ervas</option>
+                            <option value="Suculentas" th:selected="${plantForm.categoria == 'Suculentas'}">Suculentas</option>
+                            <option value="Palmeiras" th:selected="${plantForm.categoria == 'Palmeiras'}">Palmeiras</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group field-group--compact" data-field="preco">
+                        <label for="crudPreco">Preco</label>
+                        <input id="crudPreco" type="text" name="preco" th:value="${plantForm.preco}" placeholder="Ex.: 39,90">
+                    </div>
+
+                    <div class="field-group field-group--full" data-field="descricao">
+                        <label for="crudDescricao">Descricao</label>
+                        <textarea id="crudDescricao" name="descricao" rows="5" th:text="${plantForm.descricao}" placeholder="Descreva a planta, o ambiente ideal e o apelo comercial."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <p id="crudModeHint" class="micro-copy">A operacao atual usa somente os campos exibidos abaixo.</p>
+                    <button id="crudSubmit" class="btn btn-primary" type="submit">Salvar planta</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="studio-sidebar">
+            <div class="status-panel" th:if="${feedbackMessage}" th:classappend="' status-panel--' + ${feedbackTone}">
+                <span class="status-code" th:text="'HTTP ' + ${feedbackStatus}">HTTP 200</span>
+                <h3 th:text="${feedbackTitle}">Resultado da operacao</h3>
+                <p th:text="${feedbackMessage}">Mensagem da operacao.</p>
+            </div>
+
+            <div class="status-panel status-panel--neutral" th:unless="${feedbackMessage}">
+                <span class="status-code">Painel pronto</span>
+                <h3>Operacao carregada</h3>
+                <p>Selecione uma funcao, preencha o formulario e envie a requisicao para trabalhar no catalogo.</p>
+            </div>
+
+            <div class="detail-card" th:if="${selectedPlant}">
+                <div class="detail-card__header">
+                    <span class="tag" th:text="${selectedPlant.categoria}">Categoria</span>
+                    <strong class="money" th:text="'R$ ' + ${#numbers.formatDecimal(selectedPlant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong>
+                </div>
+                <h3 th:text="${selectedPlant.nome}">Nome da planta</h3>
+                <p th:text="${selectedPlant.descricao}">Descricao da planta.</p>
+            </div>
+
+            <div class="detail-card detail-card--soft" th:unless="${selectedPlant}">
+                <span class="tag">Fluxo rapido</span>
+                <h3>Uma unica tela para toda a rotina</h3>
+                <p>O formulario se adapta a cada operacao para reduzir ruido visual e acelerar o trabalho da equipe.</p>
+            </div>
+        </aside>
+    </section>
+
+    <section class="table-surface shell">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Inventario da loja</span>
+                <h2>Lista administrativa</h2>
+            </div>
+            <p>Panorama atual da colecao cadastrada no sistema.</p>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preco</th>
+                    <th>Descricao</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="plant : ${plants}">
+                    <td th:text="${plant.id}">1</td>
+                    <td th:text="${plant.nome}">Nome</td>
+                    <td th:text="${plant.categoria}">Categoria</td>
+                    <td th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</td>
+                    <td th:text="${plant.descricao}">Descricao</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/app.js}" defer></script>
+</body>
+</html>

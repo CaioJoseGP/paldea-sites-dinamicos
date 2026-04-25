@@ -2,34 +2,48 @@
 
 ## Visao geral
 
-O projeto Paldea era uma aplicacao Spring Boot voltada para uma loja de plantas de jardim. A proposta combinava uma API REST simples com paginas estaticas para apresentar catalogo, promocao e operacoes de cadastro.
+O projeto Paldea representa a presenca digital de uma loja de plantas ornamentais, com foco em vitrine comercial, catalogo visual e operacao administrativa. A proposta desta fase e unir uma interface mais profissional com processamento server side em Spring MVC, sem depender de banco de dados real.
 
-## Dominio e dados
+## Tema e dominio
 
-- Entidade principal: `Plant`
-- Campos usados: `id`, `nome`, `descricao`, `preco` e `categoria`
-- Persistencia: repositorio em memoria, sem banco de dados
-- Dados iniciais: lista mockada de plantas ornamentais, flores, aromaticas, ervas, suculentas e palmeiras
+- Tema principal: loja de plantas com curadoria para interiores, jardins e presentes
+- Entidade central: `Plant`
+- Campos usados: `id`, `nome`, `descricao`, `categoria` e `preco`
+- Persistencia: repositorio em memoria
+- Dados iniciais: colecao mockada com especies de diferentes categorias
+
+## Arquitetura atual
+
+- `LoginController`: recebe o acesso da equipe e redireciona para a vitrine
+- `ShowcaseController`: entrega as paginas de ofertas e catalogo
+- `PlantController`: concentra as operacoes de cadastro, busca, atualizacao e exclusao
+- `PlantService`: aplica regras simples de negocio e validacao
+- `PlantRepository`: mantem os registros em memoria
+- `templates/*.html`: views renderizadas no servidor com Thymeleaf
 
 ## Logica da aplicacao
 
-- `GET /api/plantas`: listava todas as plantas cadastradas
-- `GET /api/plantas/{id}`: buscava uma planta por identificador
-- `POST /api/plantas`: criava um novo registro
-- `PUT /api/plantas/{id}`: atualizava um registro existente
-- `DELETE /api/plantas/{id}`: removia um registro existente
-- `GET /api/promocao`: retornava um objeto fixo de promocao com estado ativo, mensagem e percentual de desconto
+- `GET /login`: abre a tela inicial de acesso
+- `POST /login`: valida as credenciais da equipe
+- `GET /ofertas`: mostra a vitrine com comportamento condicional para a campanha
+- `GET /catalogo`: exibe a colecao com repeticao de itens na view
+- `GET /plantas`: abre a central administrativa
+- `POST /plantas/inserir`: cria um novo cadastro
+- `POST /plantas/atualizar`: altera um cadastro existente
+- `POST /plantas/apagar`: remove um cadastro existente
+- `GET /plantas/buscar`: localiza uma planta por ID
 
-## Logica exibida no frontend
+## Premissa academica atendida
 
-- `index.html`: consumia `/api/promocao` e demonstrava exibicao condicional com `if`
-- `catalogo.html`: consumia `/api/plantas` e renderizava a lista de plantas com iteracao via `forEach`
-- `crud.html`: oferecia interface para criar, buscar, atualizar, excluir e listar plantas pela API
-- `style.css`: centralizava o estilo visual das paginas
+- Mockup inicial evoluido para uma aplicacao Spring MVC funcional
+- Pagina condicional implementada com `th:if`
+- Pagina de listagem implementada com `th:each`
+- CRUD visual com processamento server side
+- Tratamento de `200 OK`, `400 Bad Request` e `404 Not Found`
 
 ## Premissa tecnica
 
-- Backend em Spring Boot com `spring-boot-starter-webmvc`
-- Teste basico de subida de contexto com `@SpringBootTest`
-- Aplicacao sem autenticacao, sem banco e sem persistencia duravel
-- Objetivo principal: demonstrar conceitos de CRUD, consumo de API no frontend e logica condicional/listagem em JavaScript
+- Spring Boot com `spring-boot-starter-webmvc`
+- Templates server side com `spring-boot-starter-thymeleaf`
+- Sem JavaScript para envio das requisicoes HTTP principais
+- Sem banco de dados, autenticacao externa ou persistencia duravel

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Paldea Jardim - catalogo de plantas.">
+    <title>Paldea Jardim | Catalogo</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body class="page-body">
+<header class="site-header">
+    <div class="site-header__inner">
+        <a class="brand" th:href="@{/ofertas}">
+            <span class="brand-mark">P</span>
+            <span class="brand-copy">
+                <strong>Paldea Jardim</strong>
+                <small>Botanica contemporanea</small>
+            </span>
+        </a>
+
+        <nav class="site-nav">
+            <a th:href="@{/ofertas}">Ofertas</a>
+            <a class="active" th:href="@{/catalogo}">Catalogo</a>
+            <a th:href="@{/plantas}">Gestao</a>
+        </nav>
+
+        <a class="header-login" th:href="@{/login}">Entrar</a>
+    </div>
+</header>
+
+<main class="page-main">
+    <section class="hero-frame hero-frame--catalog shell">
+        <div class="hero-grid">
+            <div class="hero-display">
+                <span class="eyebrow">Colecao completa</span>
+                <h1>Um catalogo com cara de loja real, pensado para valorizar cada especie em tela cheia.</h1>
+                <p class="hero-lead">
+                    A vitrine do catalogo organiza especies por categoria, da mais delicada a mais estrutural, em uma
+                    composicao com mais impacto visual e leitura mais facil.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn btn-primary" th:href="@{/ofertas}">Voltar para ofertas</a>
+                    <a class="btn btn-secondary" th:href="@{/plantas}">Gerenciar colecao</a>
+                </div>
+            </div>
+
+            <aside class="hero-aside">
+                <div class="metric-card">
+                    <span class="metric-label">Itens cadastrados</span>
+                    <strong th:text="${plants.size()}">6</strong>
+                    <p>Um inventario enxuto, com leitura clara para a equipe e apresentacao mais refinada para a vitrine.</p>
+                </div>
+                <div class="metric-card metric-card--soft">
+                    <span class="metric-label">Proposta visual</span>
+                    <strong>Editorial</strong>
+                    <p>Tipografia de destaque, cards amplos e mais espaco para imagem mental e descricao comercial.</p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <section class="catalog-mosaic shell">
+        <article class="catalog-card" th:each="plant, iter : ${plants}" th:classappend="${iter.index == 0 ? ' catalog-card--featured' : ''}">
+            <div class="catalog-card__top">
+                <span class="plant-crest" th:text="${plant.nome.substring(0,1)}">S</span>
+                <span class="tag" th:text="${plant.categoria}">Categoria</span>
+            </div>
+
+            <div class="catalog-card__body">
+                <h2 th:text="${plant.nome}">Nome</h2>
+                <p th:text="${plant.descricao}">Descricao da planta.</p>
+            </div>
+
+            <div class="catalog-card__bottom">
+                <strong class="money" th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong>
+                <a class="inline-link" th:href="@{/plantas}">Gerenciar</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="ribbon-grid shell">
+        <article class="ribbon-card">
+            <span class="tag">Curadoria</span>
+            <h3>Categorias bem separadas</h3>
+            <p>Os cards destacam tipo, nome, descricao e valor com uma hierarquia visual mais limpa.</p>
+        </article>
+        <article class="ribbon-card">
+            <span class="tag">Escala</span>
+            <h3>Primeiro item em maior destaque</h3>
+            <p>A grade usa variacao de tamanho para quebrar a repeticao e deixar o conjunto mais sofisticado.</p>
+        </article>
+        <article class="ribbon-card">
+            <span class="tag">Fluxo</span>
+            <h3>Ligacao direta com a gestao</h3>
+            <p>O catalogo continua conectado ao painel operacional sem perder a aparencia de pagina comercial.</p>
+        </article>
+    </section>
+</main>
+</body>
+</html>

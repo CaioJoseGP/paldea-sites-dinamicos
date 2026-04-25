@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Paldea Jardim - ofertas sazonais e destaques da vitrine.">
+    <title>Paldea Jardim | Ofertas</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body class="page-body">
+<header class="site-header">
+    <div class="site-header__inner">
+        <a class="brand" th:href="@{/ofertas}">
+            <span class="brand-mark">P</span>
+            <span class="brand-copy">
+                <strong>Paldea Jardim</strong>
+                <small>Botanica contemporanea</small>
+            </span>
+        </a>
+
+        <nav class="site-nav">
+            <a class="active" th:href="@{/ofertas}">Ofertas</a>
+            <a th:href="@{/catalogo}">Catalogo</a>
+            <a th:href="@{/plantas}">Gestao</a>
+        </nav>
+
+        <a class="header-login" th:href="@{/login}">Entrar</a>
+    </div>
+</header>
+
+<main class="page-main">
+    <section class="hero-frame hero-frame--offers shell">
+        <div class="hero-grid">
+            <div class="hero-display">
+                <span class="eyebrow">Edicao da semana</span>
+                <h1>Ofertas desenhadas para transformar a vitrine em uma experiencia mais desejavel.</h1>
+                <p class="hero-lead">
+                    A selecao comercial da Paldea destaca especies para interiores, presentes e composicoes com mais
+                    valor percebido na primeira visita.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn btn-primary" th:href="@{/catalogo}">Explorar catalogo</a>
+                    <a class="btn btn-secondary" th:href="@{/plantas}">Abrir gestao</a>
+                </div>
+
+                <div class="hero-pill-row">
+                    <span class="hero-pill">Entrega local</span>
+                    <span class="hero-pill">Curadoria ativa</span>
+                    <span class="hero-pill">Selecao sazonal</span>
+                </div>
+            </div>
+
+            <aside class="hero-aside">
+                <div class="metric-card" th:if="${usuario}">
+                    <span class="metric-label">Acesso confirmado</span>
+                    <strong th:text="${usuario}">Equipe</strong>
+                    <p>Seu painel comercial esta pronto para navegar entre vitrine, catalogo e operacao.</p>
+                </div>
+
+                <form class="control-card" th:action="@{/ofertas}" method="get">
+                    <div class="section-heading section-heading--tight">
+                        <div>
+                            <span class="eyebrow">Condicao comercial</span>
+                            <h2>Status da campanha</h2>
+                        </div>
+                        <p>Altere a exibicao da vitrine para visualizar o comportamento da oferta ativa.</p>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="promocaoStatus">Exibicao</label>
+                        <select id="promocaoStatus" name="promocaoStatus">
+                            <option value="ativa" th:selected="${promocaoStatus == 'ativa'}">Promocao ativa</option>
+                            <option value="inativa" th:selected="${promocaoStatus == 'inativa'}">Promocao inativa</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary btn-block" type="submit">Atualizar vitrine</button>
+                </form>
+            </aside>
+        </div>
+    </section>
+
+    <div class="status-panel shell" th:if="${feedbackMessage}" th:classappend="' status-panel--' + ${feedbackTone}">
+        <span class="status-code" th:text="'HTTP ' + ${feedbackStatus}">HTTP 200</span>
+        <h3 th:text="${feedbackTitle}">Acesso liberado</h3>
+        <p th:text="${feedbackMessage}">Mensagem de retorno.</p>
+    </div>
+
+    <section class="split-section shell">
+        <article class="feature-surface">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">Pagina condicional</span>
+                    <h2>Destaque principal da campanha</h2>
+                </div>
+            </div>
+
+            <!-- Entrega 1 - uso de if: o destaque abaixo muda conforme o status da promocao enviado pelo servidor. -->
+            <div class="offer-stage offer-stage--active" th:if="${promocaoAtiva}">
+                <div class="offer-stage__header">
+                    <span class="tag">Oferta ativa</span>
+                    <strong>20% off</strong>
+                </div>
+                <h3>Suculentas com composicoes pensadas para casa, escritorio e presentes.</h3>
+                <p>
+                    Quando a campanha esta ativa, a vitrine evidencia valor promocional e chama a atencao para uma
+                    colecao com alta procura e baixa manutencao.
+                </p>
+                <a class="btn btn-primary" th:href="@{/catalogo}">Ver colecao completa</a>
+            </div>
+
+            <div class="offer-stage offer-stage--resting" th:unless="${promocaoAtiva}">
+                <div class="offer-stage__header">
+                    <span class="tag">Selecao regular</span>
+                    <strong>Curadoria</strong>
+                </div>
+                <h3>A vitrine retorna para a apresentacao principal da loja.</h3>
+                <p>
+                    Sem campanha promocional, o destaque volta para a curadoria fixa da estacao, com foco em composicao,
+                    textura e atmosfera.
+                </p>
+                <a class="btn btn-secondary" th:href="@{/catalogo}">Abrir catalogo</a>
+            </div>
+        </article>
+
+        <article class="stack-surface">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">Pagina com repeticao</span>
+                    <h2>Destaques da curadoria</h2>
+                </div>
+                <p>Os itens abaixo repetem a mesma estrutura visual para simular a listagem da colecao comercial.</p>
+            </div>
+
+            <!-- Entrega 1 - uso de for: os cards sao repetidos com th:each para representar uma lista de dados. -->
+            <div class="curation-list">
+                <article class="curation-card" th:each="plant : ${destaques}">
+                    <div>
+                        <span class="tag" th:text="${plant.categoria}">Categoria</span>
+                        <h3 th:text="${plant.nome}">Nome da planta</h3>
+                        <p th:text="${plant.descricao}">Descricao</p>
+                    </div>
+                    <strong class="money" th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong>
+                </article>
+            </div>
+        </article>
+    </section>
+
+    <section class="ribbon-grid shell">
+        <article class="ribbon-card">
+            <span class="tag">Ambiente</span>
+            <h3>Visual amplo e mais arejado</h3>
+            <p>Blocos com mais respiro e secoes maiores para o conteudo ocupar a tela com mais presenca.</p>
+        </article>
+        <article class="ribbon-card">
+            <span class="tag">Navegacao</span>
+            <h3>Menu central e acesso no canto</h3>
+            <p>A navegacao principal fica no eixo da pagina e o login foi deslocado para a extremidade direita.</p>
+        </article>
+        <article class="ribbon-card">
+            <span class="tag">Marca</span>
+            <h3>Estetica mais profissional</h3>
+            <p>Paleta natural, brilho controlado e contraste melhor distribuido para reforcar o tom premium.</p>
+        </article>
+    </section>
+</main>
+</body>
+</html>
