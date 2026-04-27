@@ -7,163 +7,120 @@
     <title>Paldea Jardim | Ofertas</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-<body class="page-body">
-<header class="site-header">
-    <div class="site-header__inner">
-        <a class="brand" th:href="@{/ofertas}">
-            <span class="brand-mark">P</span>
-            <span class="brand-copy">
-                <strong>Paldea Jardim</strong>
-                <small>Botanica contemporanea</small>
-            </span>
-        </a>
-
-        <nav class="site-nav">
-            <a class="active" th:href="@{/ofertas}">Ofertas</a>
-            <a th:href="@{/catalogo}">Catalogo</a>
-            <a th:href="@{/plantas}">Gestao</a>
-        </nav>
-
-        <a class="header-login" th:href="@{/login}">Entrar</a>
-    </div>
-</header>
-
-<main class="page-main">
-    <section class="hero-frame hero-frame--offers shell">
-        <div class="hero-grid">
-            <div class="hero-display">
-                <span class="eyebrow">Edicao da semana</span>
-                <h1>Ofertas desenhadas para transformar a vitrine em uma experiencia mais desejavel.</h1>
-                <p class="hero-lead">
-                    A selecao comercial da Paldea destaca especies para interiores, presentes e composicoes com mais
-                    valor percebido na primeira visita.
-                </p>
-
-                <div class="hero-actions">
-                    <a class="btn btn-primary" th:href="@{/catalogo}">Explorar catalogo</a>
-                    <a class="btn btn-secondary" th:href="@{/plantas}">Abrir gestao</a>
-                </div>
-
-                <div class="hero-pill-row">
-                    <span class="hero-pill">Entrega local</span>
-                    <span class="hero-pill">Curadoria ativa</span>
-                    <span class="hero-pill">Selecao sazonal</span>
-                </div>
-            </div>
-
-            <aside class="hero-aside">
-                <div class="metric-card" th:if="${usuario}">
-                    <span class="metric-label">Acesso confirmado</span>
-                    <strong th:text="${usuario}">Equipe</strong>
-                    <p>Seu painel comercial esta pronto para navegar entre vitrine, catalogo e operacao.</p>
-                </div>
-
-                <form class="control-card" th:action="@{/ofertas}" method="get">
-                    <div class="section-heading section-heading--tight">
-                        <div>
-                            <span class="eyebrow">Condicao comercial</span>
-                            <h2>Status da campanha</h2>
-                        </div>
-                        <p>Altere a exibicao da vitrine para visualizar o comportamento da oferta ativa.</p>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="promocaoStatus">Exibicao</label>
-                        <select id="promocaoStatus" name="promocaoStatus">
-                            <option value="ativa" th:selected="${promocaoStatus == 'ativa'}">Promocao ativa</option>
-                            <option value="inativa" th:selected="${promocaoStatus == 'inativa'}">Promocao inativa</option>
-                        </select>
-                    </div>
-
-                    <button class="btn btn-primary btn-block" type="submit">Atualizar vitrine</button>
-                </form>
-            </aside>
+<body>
+    
+    <header class="navbar">
+        <div class="container nav-container">
+            <a class="brand" th:href="@{/ofertas}">
+                <span>Paldea</span>
+                <small style="color: var(--text-muted); font-weight: 400; font-size: 0.8rem; text-transform: uppercase;">Botanica Contemporanea</small>
+            </a>
+            <nav class="nav-links">
+                <a class="nav-item active" th:href="@{/ofertas}">Ofertas</a>
+                <a class="nav-item" th:href="@{/catalogo}">Catalogo</a>
+                <a class="nav-item" th:href="@{/plantas}">Gestao</a>
+                <a class="btn btn-primary" th:href="@{/login}" style="padding: 0.5rem 1.25rem; margin-left: 1rem;">Acesso</a>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <div class="status-panel shell" th:if="${feedbackMessage}" th:classappend="' status-panel--' + ${feedbackTone}">
-        <span class="status-code" th:text="'HTTP ' + ${feedbackStatus}">HTTP 200</span>
-        <h3 th:text="${feedbackTitle}">Acesso liberado</h3>
-        <p th:text="${feedbackMessage}">Mensagem de retorno.</p>
-    </div>
+    <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+        
+        <div class="alert alert-success" th:if="${feedbackMessage}" style="margin-bottom: 2rem;">
+            <strong th:text="'HTTP ' + ${feedbackStatus}">HTTP 200</strong>
+            <span th:text="${feedbackTitle}">Acesso liberado</span>
+            <span style="font-size: 0.8rem;" th:text="${feedbackMessage}">Mensagem de retorno.</span>
+        </div>
 
-    <section class="split-section shell">
-        <article class="feature-surface">
-            <div class="section-heading">
-                <div>
-                    <span class="eyebrow">Pagina condicional</span>
-                    <h2>Destaque principal da campanha</h2>
-                </div>
-            </div>
-
-            <!-- Entrega 1 - uso de if: o destaque abaixo muda conforme o status da promocao enviado pelo servidor. -->
-            <div class="offer-stage offer-stage--active" th:if="${promocaoAtiva}">
-                <div class="offer-stage__header">
-                    <span class="tag">Oferta ativa</span>
-                    <strong>20% off</strong>
-                </div>
-                <h3>Suculentas com composicoes pensadas para casa, escritorio e presentes.</h3>
-                <p>
-                    Quando a campanha esta ativa, a vitrine evidencia valor promocional e chama a atencao para uma
-                    colecao com alta procura e baixa manutencao.
+        <section class="grid-2" style="margin-bottom: 4rem;">
+            <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: center;">
+                <span class="badge" style="width: fit-content; margin-bottom: 1rem;">Edicao da Semana</span>
+                <h1 style="font-size: 3rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #fff, #a0a8b5); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Vitrine de Curadoria Exclusiva.</h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2.5rem;">
+                    A selecao comercial da Paldea destaca especies para interiores, presentes e composicoes com mais valor percebido.
                 </p>
-                <a class="btn btn-primary" th:href="@{/catalogo}">Ver colecao completa</a>
+                <div style="display: flex; gap: 1rem;">
+                    <a class="btn btn-primary" th:href="@{/catalogo}">Explorar Catalogo</a>
+                    <a class="btn btn-secondary" th:href="@{/plantas}">Painel de Gestao</a>
+                </div>
             </div>
 
-            <div class="offer-stage offer-stage--resting" th:unless="${promocaoAtiva}">
-                <div class="offer-stage__header">
-                    <span class="tag">Selecao regular</span>
-                    <strong>Curadoria</strong>
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                <div class="glass-panel" th:if="${usuario}" style="background: rgba(0, 210, 135, 0.05); border-color: rgba(0, 210, 135, 0.2);">
+                    <span style="color: var(--primary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Acesso Confirmado</span>
+                    <h3 style="margin-top: 0.5rem; margin-bottom: 0.5rem;" th:text="${usuario}">Equipe</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Seu painel comercial esta pronto para uso.</p>
                 </div>
-                <h3>A vitrine retorna para a apresentacao principal da loja.</h3>
-                <p>
-                    Sem campanha promocional, o destaque volta para a curadoria fixa da estacao, com foco em composicao,
-                    textura e atmosfera.
+
+                <div class="glass-panel">
+                    <h3 style="margin-bottom: 0.5rem;">Status da Campanha</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Altere a exibicao da vitrine para visualizar o comportamento da oferta ativa.</p>
+                    
+                    <form th:action="@{/ofertas}" method="get">
+                        <div class="form-group">
+                            <select id="promocaoStatus" name="promocaoStatus" class="form-control">
+                                <option value="ativa" th:selected="${promocaoStatus == 'ativa'}">Campanha Promocional Ativa</option>
+                                <option value="inativa" th:selected="${promocaoStatus == 'inativa'}">Campanha Regular Inativa</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary btn-block" type="submit">Atualizar Vitrine</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Entrega 1 - uso de if: o destaque abaixo muda conforme o status da promocao enviado pelo servidor. -->
+        <section style="margin-bottom: 4rem;">
+            <div th:if="${promocaoAtiva}" class="glass-panel" style="background: linear-gradient(135deg, rgba(0, 210, 135, 0.1), rgba(0,0,0,0.4)); border-color: rgba(0, 210, 135, 0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <span class="badge">Oferta Ativa Especial</span>
+                    <strong style="color: var(--primary); font-size: 1.5rem;">20% OFF</strong>
+                </div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Suculentas com composicoes pensadas para casa e presentes.</h2>
+                <p style="color: var(--text-muted); line-height: 1.6; max-width: 800px; margin-bottom: 2rem;">
+                    Quando a campanha esta ativa, a vitrine evidencia o valor promocional e chama a atencao para uma colecao com alta procura e baixa manutencao.
                 </p>
-                <a class="btn btn-secondary" th:href="@{/catalogo}">Abrir catalogo</a>
+                <a class="btn btn-primary" th:href="@{/catalogo}">Ver colecao em oferta</a>
             </div>
-        </article>
 
-        <article class="stack-surface">
-            <div class="section-heading">
-                <div>
-                    <span class="eyebrow">Pagina com repeticao</span>
-                    <h2>Destaques da curadoria</h2>
+            <div th:unless="${promocaoAtiva}" class="glass-panel" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0,0,0,0.4)); border-color: rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <span class="badge" style="background: rgba(255,255,255,0.1); color: var(--text-main);">Selecao Regular</span>
+                    <strong style="color: var(--text-muted); font-size: 1.2rem; text-transform: uppercase;">Curadoria Fixa</strong>
                 </div>
-                <p>Os itens abaixo repetem a mesma estrutura visual para simular a listagem da colecao comercial.</p>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">A vitrine retorna para a apresentacao principal da loja.</h2>
+                <p style="color: var(--text-muted); line-height: 1.6; max-width: 800px; margin-bottom: 2rem;">
+                    Sem campanha promocional, o destaque volta para a curadoria fixa da estacao, com foco em composicao, textura e atmosfera sofisticada.
+                </p>
+                <a class="btn btn-secondary" th:href="@{/catalogo}">Explorar a curadoria</a>
+            </div>
+        </section>
+
+        <!-- Entrega 1 - uso de for: os cards sao repetidos com th:each para representar uma lista de dados. -->
+        <section>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+                <div>
+                    <span style="color: var(--primary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Destaques</span>
+                    <h2>Colecao Comercial</h2>
+                </div>
             </div>
 
-            <!-- Entrega 1 - uso de for: os cards sao repetidos com th:each para representar uma lista de dados. -->
-            <div class="curation-list">
-                <article class="curation-card" th:each="plant : ${destaques}">
-                    <div>
-                        <span class="tag" th:text="${plant.categoria}">Categoria</span>
-                        <h3 th:text="${plant.nome}">Nome da planta</h3>
-                        <p th:text="${plant.descricao}">Descricao</p>
+            <div class="grid-3">
+                <article class="card" th:each="plant : ${destaques}">
+                    <div class="card-header">
+                        <span class="badge" th:text="${plant.categoria}">Categoria</span>
                     </div>
-                    <strong class="money" th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong>
+                    <div class="card-body">
+                        <h3 class="card-title" th:text="${plant.nome}">Nome da planta</h3>
+                        <p class="card-text" th:text="${plant.descricao}">Descricao</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price" th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</span>
+                    </div>
                 </article>
             </div>
-        </article>
-    </section>
+        </section>
 
-    <section class="ribbon-grid shell">
-        <article class="ribbon-card">
-            <span class="tag">Ambiente</span>
-            <h3>Visual amplo e mais arejado</h3>
-            <p>Blocos com mais respiro e secoes maiores para o conteudo ocupar a tela com mais presenca.</p>
-        </article>
-        <article class="ribbon-card">
-            <span class="tag">Navegacao</span>
-            <h3>Menu central e acesso no canto</h3>
-            <p>A navegacao principal fica no eixo da pagina e o login foi deslocado para a extremidade direita.</p>
-        </article>
-        <article class="ribbon-card">
-            <span class="tag">Marca</span>
-            <h3>Estetica mais profissional</h3>
-            <p>Paleta natural, brilho controlado e contraste melhor distribuido para reforcar o tom premium.</p>
-        </article>
-    </section>
-</main>
+    </main>
 </body>
 </html>

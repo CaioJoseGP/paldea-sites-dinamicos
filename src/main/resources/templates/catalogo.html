@@ -7,95 +7,64 @@
     <title>Paldea Jardim | Catalogo</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-<body class="page-body">
-<header class="site-header">
-    <div class="site-header__inner">
-        <a class="brand" th:href="@{/ofertas}">
-            <span class="brand-mark">P</span>
-            <span class="brand-copy">
-                <strong>Paldea Jardim</strong>
-                <small>Botanica contemporanea</small>
-            </span>
-        </a>
-
-        <nav class="site-nav">
-            <a th:href="@{/ofertas}">Ofertas</a>
-            <a class="active" th:href="@{/catalogo}">Catalogo</a>
-            <a th:href="@{/plantas}">Gestao</a>
-        </nav>
-
-        <a class="header-login" th:href="@{/login}">Entrar</a>
-    </div>
-</header>
-
-<main class="page-main">
-    <section class="hero-frame hero-frame--catalog shell">
-        <div class="hero-grid">
-            <div class="hero-display">
-                <span class="eyebrow">Colecao completa</span>
-                <h1>Um catalogo com cara de loja real, pensado para valorizar cada especie em tela cheia.</h1>
-                <p class="hero-lead">
-                    A vitrine do catalogo organiza especies por categoria, da mais delicada a mais estrutural, em uma
-                    composicao com mais impacto visual e leitura mais facil.
-                </p>
-
-                <div class="hero-actions">
-                    <a class="btn btn-primary" th:href="@{/ofertas}">Voltar para ofertas</a>
-                    <a class="btn btn-secondary" th:href="@{/plantas}">Gerenciar colecao</a>
-                </div>
-            </div>
-
-            <aside class="hero-aside">
-                <div class="metric-card">
-                    <span class="metric-label">Itens cadastrados</span>
-                    <strong th:text="${plants.size()}">6</strong>
-                    <p>Um inventario enxuto, com leitura clara para a equipe e apresentacao mais refinada para a vitrine.</p>
-                </div>
-                <div class="metric-card metric-card--soft">
-                    <span class="metric-label">Proposta visual</span>
-                    <strong>Editorial</strong>
-                    <p>Tipografia de destaque, cards amplos e mais espaco para imagem mental e descricao comercial.</p>
-                </div>
-            </aside>
+<body>
+    
+    <header class="navbar">
+        <div class="container nav-container">
+            <a class="brand" th:href="@{/ofertas}">
+                <span>Paldea</span>
+                <small style="color: var(--text-muted); font-weight: 400; font-size: 0.8rem; text-transform: uppercase;">Botanica Contemporanea</small>
+            </a>
+            <nav class="nav-links">
+                <a class="nav-item" th:href="@{/ofertas}">Ofertas</a>
+                <a class="nav-item active" th:href="@{/catalogo}">Catalogo</a>
+                <a class="nav-item" th:href="@{/plantas}">Gestao</a>
+                <a class="btn btn-primary" th:href="@{/login}" style="padding: 0.5rem 1.25rem; margin-left: 1rem;">Acesso</a>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <section class="catalog-mosaic shell">
-        <article class="catalog-card" th:each="plant, iter : ${plants}" th:classappend="${iter.index == 0 ? ' catalog-card--featured' : ''}">
-            <div class="catalog-card__top">
-                <span class="plant-crest" th:text="${plant.nome.substring(0,1)}">S</span>
-                <span class="tag" th:text="${plant.categoria}">Categoria</span>
+    <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+        
+        <section class="grid-2" style="margin-bottom: 4rem;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <span style="color: var(--primary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 1rem; display: block;">Colecao Completa</span>
+                <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.1;">Catalogo Botânico.</h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2.5rem; max-width: 500px;">
+                    A vitrine do catalogo organiza especies por categoria, com composicao visual de impacto e leitura facil, valorizando cada planta em foco absoluto.
+                </p>
+                <div style="display: flex; gap: 1rem;">
+                    <a class="btn btn-primary" th:href="@{/plantas}">Gerenciar Inventario</a>
+                </div>
             </div>
 
-            <div class="catalog-card__body">
-                <h2 th:text="${plant.nome}">Nome</h2>
-                <p th:text="${plant.descricao}">Descricao da planta.</p>
+            <div style="display: flex; gap: 1rem; flex-direction: column; justify-content: center;">
+                <div class="glass-panel" style="background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2)); padding: 2rem;">
+                    <span style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Itens Cadastrados</span>
+                    <strong style="display: block; font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1; margin: 0.5rem 0;" th:text="${plants.size()}">6</strong>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Um inventario selecionado a dedo, oferecendo leitura clara para a equipe e destaque comercial refinado.</p>
+                </div>
             </div>
+        </section>
 
-            <div class="catalog-card__bottom">
-                <strong class="money" th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong>
-                <a class="inline-link" th:href="@{/plantas}">Gerenciar</a>
+        <section>
+            <div class="grid-3">
+                <article class="card" th:each="plant, iter : ${plants}" th:classappend="${iter.index == 0 ? ' featured' : ''}">
+                    <div class="card-header">
+                        <span class="badge" th:text="${plant.categoria}">Categoria</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" th:text="${plant.nome}">Nome</h3>
+                        <p class="card-text" th:text="${plant.descricao}">Descricao da planta.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price" th:text="'R$ ' + ${#numbers.formatDecimal(plant.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</span>
+                        <a th:href="@{/plantas(searchId=${plant.id})}" style="color: var(--primary); font-size: 0.875rem; font-weight: 600;">Gerenciar &rarr;</a>
+                    </div>
+                </article>
             </div>
-        </article>
-    </section>
+        </section>
 
-    <section class="ribbon-grid shell">
-        <article class="ribbon-card">
-            <span class="tag">Curadoria</span>
-            <h3>Categorias bem separadas</h3>
-            <p>Os cards destacam tipo, nome, descricao e valor com uma hierarquia visual mais limpa.</p>
-        </article>
-        <article class="ribbon-card">
-            <span class="tag">Escala</span>
-            <h3>Primeiro item em maior destaque</h3>
-            <p>A grade usa variacao de tamanho para quebrar a repeticao e deixar o conjunto mais sofisticado.</p>
-        </article>
-        <article class="ribbon-card">
-            <span class="tag">Fluxo</span>
-            <h3>Ligacao direta com a gestao</h3>
-            <p>O catalogo continua conectado ao painel operacional sem perder a aparencia de pagina comercial.</p>
-        </article>
-    </section>
-</main>
+    </main>
 </body>
 </html>

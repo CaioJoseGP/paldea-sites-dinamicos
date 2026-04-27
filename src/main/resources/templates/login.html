@@ -7,118 +7,58 @@
     <title>Paldea Jardim | Entrar</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-<body class="landing-page">
-<header class="site-header site-header--transparent">
-    <div class="site-header__inner">
-        <a class="brand" th:href="@{/ofertas}">
-            <span class="brand-mark">P</span>
-            <span class="brand-copy">
-                <strong>Paldea Jardim</strong>
-                <small>Botanica contemporanea</small>
-            </span>
-        </a>
+<body>
+    
+    <header class="navbar">
+        <div class="container nav-container">
+            <a class="brand" th:href="@{/ofertas}">
+                <span>Paldea</span>
+                <small style="color: var(--text-muted); font-weight: 400; font-size: 0.8rem; text-transform: uppercase;">Botanica Contemporanea</small>
+            </a>
+            <nav class="nav-links">
+                <a class="nav-item" th:href="@{/ofertas}">Ofertas</a>
+                <a class="nav-item" th:href="@{/catalogo}">Catalogo</a>
+                <a class="nav-item" th:href="@{/plantas}">Gestao</a>
+            </nav>
+        </div>
+    </header>
 
-        <nav class="site-nav">
-            <a th:href="@{/ofertas}">Ofertas</a>
-            <a th:href="@{/catalogo}">Catalogo</a>
-            <a th:href="@{/plantas}">Gestao</a>
-        </nav>
-
-        <a class="header-login header-login--active" href="#acesso">Entrar</a>
-    </div>
-</header>
-
-<main class="landing-main">
-    <section class="hero-frame hero-frame--landing shell">
-        <div class="hero-grid hero-grid--landing">
-            <div class="hero-display">
-                <span class="eyebrow">Curadoria botanica para interiores e jardins</span>
-                <h1>Uma experiencia digital mais sofisticada para apresentar, vender e organizar a colecao da loja.</h1>
-                <p class="hero-lead">
-                    A Paldea reune ofertas sazonais, catalogo comercial e operacao administrativa em um fluxo elegante,
-                    claro e pronto para apoiar a rotina da equipe.
-                </p>
-
-                <div class="hero-actions">
-                    <a class="btn btn-primary" th:href="@{/ofertas}">Ver vitrine</a>
-                    <a class="btn btn-secondary" th:href="@{/catalogo}">Abrir catalogo</a>
-                </div>
-
-                <div class="hero-stat-grid">
-                    <article class="stat-card">
-                        <strong>06</strong>
-                        <span>especies em colecao</span>
-                    </article>
-                    <article class="stat-card">
-                        <strong>01</strong>
-                        <span>painel central de operacao</span>
-                    </article>
-                    <article class="stat-card">
-                        <strong>24h</strong>
-                        <span>vitrine sempre disponivel</span>
-                    </article>
-                </div>
+    <main class="centered-layout">
+        <div class="login-wrapper">
+            <div class="login-header">
+                <h1>Painel Comercial</h1>
+                <p>Acesse o painel para gerenciar o catalogo da loja.</p>
             </div>
 
-            <aside class="login-panel" id="acesso">
-                <div class="section-heading section-heading--tight">
-                    <div>
-                        <span class="eyebrow">Entrar</span>
-                        <h2>Painel comercial</h2>
-                    </div>
-                    <p>Use o acesso da equipe para entrar e navegar pelas areas da Paldea.</p>
+            <div class="glass-panel">
+                <div class="alert alert-danger" th:if="${feedbackMessage}">
+                    <strong th:text="'HTTP ' + ${feedbackStatus}">HTTP 400</strong>
+                    <span th:text="${feedbackTitle}">Nao foi possivel entrar</span>
+                    <span style="font-size: 0.8rem;" th:text="${feedbackMessage}">Mensagem de retorno.</span>
                 </div>
 
-                <div class="status-panel status-panel--danger" th:if="${feedbackMessage}">
-                    <span class="status-code" th:text="'HTTP ' + ${feedbackStatus}">HTTP 400</span>
-                    <h3 th:text="${feedbackTitle}">Nao foi possivel entrar</h3>
-                    <p th:text="${feedbackMessage}">Mensagem de retorno.</p>
-                </div>
-
-                <form class="stack-form stack-form--tight" th:action="@{/login}" th:object="${loginForm}" method="post">
-                    <div class="field-group">
-                        <label for="email">E-mail</label>
-                        <input id="email" type="email" th:field="*{email}" placeholder="equipe@paldea.com">
+                <form th:action="@{/login}" th:object="${loginForm}" method="post">
+                    <div class="form-group">
+                        <label for="email" class="form-label">E-mail Corporativo</label>
+                        <input id="email" type="email" class="form-control" th:field="*{email}" placeholder="equipe@paldea.com">
                     </div>
 
-                    <div class="field-group">
-                        <label for="senha">Senha</label>
-                        <input id="senha" type="password" th:field="*{senha}" placeholder="Informe sua senha">
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input id="senha" type="password" class="form-control" th:field="*{senha}" placeholder="••••••••">
                     </div>
 
-                    <button class="btn btn-primary btn-block" type="submit">Entrar na Paldea</button>
+                    <button class="btn btn-primary btn-block" type="submit">Acessar Sistema</button>
                 </form>
+            </div>
 
-                <div class="access-note">
-                    <span class="note-label">Acesso da equipe</span>
-                    <p>
-                        E-mail: <strong th:text="${staffEmail}">equipe@paldea.com</strong><br>
-                        Senha: <strong th:text="${staffPassword}">paldea123</strong>
-                    </p>
-                </div>
-            </aside>
+            <div class="alert alert-neutral" style="text-align: center;">
+                <p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-main);">Acesso de Demonstracao</p>
+                <p>E-mail: <strong style="color: var(--primary);" th:text="${staffEmail}">equipe@paldea.com</strong></p>
+                <p>Senha: <strong style="color: var(--primary);" th:text="${staffPassword}">paldea123</strong></p>
+            </div>
         </div>
-    </section>
+    </main>
 
-    <section class="spotlight-grid shell">
-        <article class="spotlight-card">
-            <span class="tag">Colecao</span>
-            <h3>Vitrine com linguagem mais premium</h3>
-            <p>Blocos amplos, contraste suave e mais respiracao visual para valorizar os produtos.</p>
-        </article>
-
-        <article class="spotlight-card">
-            <span class="tag">Operacao</span>
-            <h3>Fluxo comercial mais claro</h3>
-            <p>Da entrada no sistema ate a gestao do catalogo, a navegacao segue um percurso direto e consistente.</p>
-        </article>
-
-        <article class="spotlight-card">
-            <span class="tag">Presenca</span>
-            <h3>Marca mais madura</h3>
-            <p>Tipografia mais editorial, paleta natural e composicao pensada para parecer um produto real.</p>
-        </article>
-    </section>
-</main>
 </body>
 </html>
