@@ -25,10 +25,10 @@ Este cenário demonstra operações bem-sucedidas.
 1. Faça o acesso via login com credenciais válidas ou navegue nas páginas de gestão (ex: inserir um novo item).
 2. O servidor processará e devolverá o código `200 OK` ou fará um redirecionamento `302 Found`.
 
-![Acesso Concedido](./acesso%20concedido.jpg)
+![Acesso Concedido](./examples/acesso%20concedido.jpg)
 
 *Exemplo de retorno de um formulário com sucesso (302 Found):*
-![Redirecionamento 302](./form%20respondeu%20com%20302%20found.jpg)
+![Redirecionamento 302](./examples/form%20respondeu%20com%20302%20found.jpg)
 
 ### 🔴 Cenário 2: Erro de Validação (400 Bad Request)
 
@@ -38,11 +38,11 @@ Este cenário comprova que o sistema barra fluxos inválidos sem quebrar, inform
 2. Envie o formulário deixando a senha vazia ou informando dados incorretos.
 
 *Payload enviado via formulário:*
-![Payload do form](./payload%20do%20form.jpg)
+![Payload do form](./examples/payload%20do%20form.jpg)
 
 3. O sistema captura a violação e retorna expressamente um erro `400 Bad Request`.
 
-![Acesso Negado 400 Bad Request](./acesso%20negado.jpg)
+![Acesso Negado 400 Bad Request](./examples/acesso%20negado.jpg)
 
 ### ⚪ Cenário 3: Registro Inexistente (404 Not Found)
 
@@ -52,7 +52,7 @@ Este cenário avalia a resposta quando a aplicação procura por algo fora do ba
 2. Utilize as funções de **Buscar** ou **Apagar** para um ID que não existe (ex: `999`).
 3. O servidor rejeita a transação e retorna um clássico erro `404 Not Found`.
 
-![Erro 404 CRUD](./crud%20delete%20erro%20404.jpg)
+![Erro 404 CRUD](./examples/crud%20delete%20erro%20404.jpg)
 
 ---
 
@@ -84,6 +84,6 @@ Para certificar a consistência do servidor sem a renderização das telas HTML,
 
 Abaixo está o registro de toda a navegação gravada dentro da plataforma, testando visualmente os caminhos que geram o manuseio dos códigos HTTP no navegador:
 
-![Vídeo de Validação HTTP demonstrando 200, 400 e 404](./http_validation_flow.webp)
+![Vídeo de Validação HTTP demonstrando 200, 400 e 404](./examples/http_validation_flow.webp)
 
-*(Se o vídeo não rodar no preview do Markdown, sinta-se livre para abri-lo pelo próprio navegador na pasta principal do projeto).*
+*(Se o vídeo não rodar no preview do Markdown, sinta-se livre para abri-lo pelo próprio navegador na pasta /examples do projeto).*
