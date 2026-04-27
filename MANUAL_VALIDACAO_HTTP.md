@@ -25,10 +25,10 @@ Este cenário demonstra operações bem-sucedidas.
 1. Faça o acesso via login com credenciais válidas ou navegue nas páginas de gestão (ex: inserir um novo item).
 2. O servidor processará e devolverá o código `200 OK` ou fará um redirecionamento `302 Found`.
 
-![Acesso Concedido](./examples/acesso%20concedido.jpg)
+![Acesso Concedido](./examples/login_success_200.jpg)
 
 *Exemplo de retorno de um formulário com sucesso (302 Found):*
-![Redirecionamento 302](./examples/form%20respondeu%20com%20302%20found.jpg)
+![Redirecionamento 302](./examples/form_redirect_302.jpg)
 
 ### 🔴 Cenário 2: Erro de Validação (400 Bad Request)
 
@@ -38,11 +38,11 @@ Este cenário comprova que o sistema barra fluxos inválidos sem quebrar, inform
 2. Envie o formulário deixando a senha vazia ou informando dados incorretos.
 
 *Payload enviado via formulário:*
-![Payload do form](./examples/payload%20do%20form.jpg)
+![Payload do form](./examples/login_payload_invalid.jpg)
 
 3. O sistema captura a violação e retorna expressamente um erro `400 Bad Request`.
 
-![Acesso Negado 400 Bad Request](./examples/acesso%20negado.jpg)
+![Acesso Negado 400 Bad Request](./examples/login_error_400.jpg)
 
 ### ⚪ Cenário 3: Registro Inexistente (404 Not Found)
 
@@ -52,7 +52,7 @@ Este cenário avalia a resposta quando a aplicação procura por algo fora do ba
 2. Utilize as funções de **Buscar** ou **Apagar** para um ID que não existe (ex: `999`).
 3. O servidor rejeita a transação e retorna um clássico erro `404 Not Found`.
 
-![Erro 404 CRUD](./examples/crud%20delete%20erro%20404.jpg)
+![Erro 404 CRUD](./examples/crud_delete_not_found_404.jpg)
 
 ---
 
