@@ -1,80 +1,89 @@
-# Manual De Validacao HTTP
+# 🔍 Validação de Status HTTP na Paldea
 
-## Entrega 2 - manual para capturar os headers
+Este tutorial guia você passo a passo para testar e comprovar o tratamento adequado de requisições HTTP e processamento *server side* da aplicação usando Spring MVC.
 
-Este manual mostra como comprovar os codigos HTTP retornados pela aplicacao Paldea. O documento foi organizado para facilitar a inclusao dos prints finais no arquivo entregue.
+---
 
-## Preparacao
+## 🛠️ Preparação do Ambiente
 
-1. Abra um terminal na raiz do projeto.
-2. Inicie a aplicacao com `.\mvnw.cmd spring-boot:run`.
+Antes de começar os testes, garanta que o servidor está rodando localmente:
+
+1. Abra um terminal na pasta raiz do projeto.
+2. Execute o comando `.\mvnw.cmd spring-boot:run`.
 3. Acesse `http://localhost:8080/login`.
 
-## Validacao pelo navegador
+---
 
-### Entrega 2 - uso de 200 OK
+## 🌐 Validação pelo Navegador (DevTools)
 
-1. Abra o navegador em `http://localhost:8080/catalogo`.
-2. Pressione `F12` para abrir o DevTools.
-3. Entre na aba `Network` ou `Rede`.
-4. Recarregue a pagina.
-5. Clique na requisicao `catalogo`.
-6. Confira em `Headers` ou `Cabecalhos` que o `Status Code` retornado e `200 OK`.
+Sempre mantenha a ferramenta de desenvolvedor aberta (pressione `F12`) na aba **Network (Rede)** para analisar as respostas do servidor.
 
-Print sugerido:
-- lista da aba `Network` mostrando a requisicao `catalogo`
-- painel de `Headers` destacando `200 OK`
+### 🟢 Cenário 1: Sucesso e Redirecionamento (200 OK / 302 Found)
 
-### Entrega 2 - uso de 400 Bad Request
+Este cenário demonstra operações bem-sucedidas. 
 
-1. Acesse `http://localhost:8080/login`.
-2. Abra o DevTools na aba `Network`.
-3. Envie o formulario de login com e-mail correto e senha vazia, ou com credenciais invalidas.
-4. Clique na requisicao `login`.
-5. Confira em `Headers` que o `Status Code` retornado e `400 Bad Request`.
+1. Faça o acesso via login com credenciais válidas ou navegue nas páginas de gestão (ex: inserir um novo item).
+2. O servidor processará e devolverá o código `200 OK` ou fará um redirecionamento `302 Found`.
 
-Print sugerido:
-- formulario enviado com dado invalido
-- cabecalhos da requisicao `login` mostrando `400 Bad Request`
+![Acesso Concedido](./acesso%20concedido.jpg)
 
-### Entrega 2 - uso de 404 Not Found
+*Exemplo de retorno de um formulário com sucesso (302 Found):*
+![Redirecionamento 302](./form%20respondeu%20com%20302%20found.jpg)
 
-1. Acesse `http://localhost:8080/plantas`.
-2. Abra o DevTools na aba `Network`.
-3. Use o modo `Buscar`.
-4. Informe um ID inexistente, como `999`.
-5. Envie a busca.
-6. Clique na requisicao `buscar`.
-7. Confira em `Headers` que o `Status Code` retornado e `404 Not Found`.
+### 🔴 Cenário 2: Erro de Validação (400 Bad Request)
 
-Print sugerido:
-- formulario de busca com `999`
-- cabecalhos da requisicao `buscar` mostrando `404 Not Found`
+Este cenário comprova que o sistema barra fluxos inválidos sem quebrar, informando o cliente com clareza.
 
-## Validacao pelo Postman
+1. Acesse o painel de login (`http://localhost:8080/login`).
+2. Envie o formulário deixando a senha vazia ou informando dados incorretos.
 
-### Entrega 2 - uso de 200 OK
+*Payload enviado via formulário:*
+![Payload do form](./payload%20do%20form.jpg)
 
-- Metodo: `GET`
-- URL: `http://localhost:8080/catalogo`
-- Resultado esperado: `200 OK`
+3. O sistema captura a violação e retorna expressamente um erro `400 Bad Request`.
 
-### Entrega 2 - uso de 400 Bad Request
+![Acesso Negado 400 Bad Request](./acesso%20negado.jpg)
 
-- Metodo: `POST`
-- URL: `http://localhost:8080/login`
-- Body: `x-www-form-urlencoded`
-- Campos:
-  - `email = equipe@paldea.com`
-  - `senha =`
-- Resultado esperado: `400 Bad Request`
+### ⚪ Cenário 3: Registro Inexistente (404 Not Found)
 
-### Entrega 2 - uso de 404 Not Found
+Este cenário avalia a resposta quando a aplicação procura por algo fora do banco (memória).
 
-- Metodo: `GET`
-- URL: `http://localhost:8080/plantas/buscar?id=999`
-- Resultado esperado: `404 Not Found`
+1. Acesse o painel de Gestão (`http://localhost:8080/plantas`).
+2. Utilize as funções de **Buscar** ou **Apagar** para um ID que não existe (ex: `999`).
+3. O servidor rejeita a transação e retorna um clássico erro `404 Not Found`.
 
-## Fechamento
+![Erro 404 CRUD](./crud%20delete%20erro%20404.jpg)
 
-Para a versao final da entrega, adicione os prints reais nos pontos sugeridos acima. Assim o documento fica completo e pronto para comprovacao visual dos cabecalhos HTTP.
+---
+
+## 🚀 Validação via Postman
+
+Para certificar a consistência do servidor sem a renderização das telas HTML, repita os testes utilizando o Postman:
+
+### Retornar 200 OK
+- **Método**: `GET`
+- **URL**: `http://localhost:8080/catalogo`
+- **Resultado Esperado**: `200 OK`
+
+### Retornar 400 Bad Request
+- **Método**: `POST`
+- **URL**: `http://localhost:8080/login`
+- **Body**: `x-www-form-urlencoded`
+  - `email`: `equipe@paldea.com`
+  - `senha`: *(deixar em branco)*
+- **Resultado Esperado**: `400 Bad Request`
+
+### Retornar 404 Not Found
+- **Método**: `GET`
+- **URL**: `http://localhost:8080/plantas/buscar?id=999`
+- **Resultado Esperado**: `404 Not Found`
+
+---
+
+## 📹 Demonstração Prática Completa
+
+Abaixo está o registro de toda a navegação gravada dentro da plataforma, testando visualmente os caminhos que geram o manuseio dos códigos HTTP no navegador:
+
+![Vídeo de Validação HTTP demonstrando 200, 400 e 404](./http_validation_flow.webp)
+
+*(Se o vídeo não rodar no preview do Markdown, sinta-se livre para abri-lo pelo próprio navegador na pasta principal do projeto).*
