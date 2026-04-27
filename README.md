@@ -27,6 +27,9 @@ Este cenário demonstra operações bem-sucedidas.
 
 ![Acesso Concedido](./examples/login_success_200.jpg)
 
+*Payload enviado via formulário:*
+![Payload do form](./examples/login_payload_invalid.jpg)
+
 *Exemplo de retorno de um formulário com sucesso (302 Found):*
 ![Redirecionamento 302](./examples/form_redirect_302.jpg)
 
@@ -36,9 +39,6 @@ Este cenário comprova que o sistema barra fluxos inválidos sem quebrar, inform
 
 1. Acesse o painel de login (`http://localhost:8080/login`).
 2. Envie o formulário deixando a senha vazia ou informando dados incorretos.
-
-*Payload enviado via formulário:*
-![Payload do form](./examples/login_payload_invalid.jpg)
 
 3. O sistema captura a violação e retorna expressamente um erro `400 Bad Request`.
 
