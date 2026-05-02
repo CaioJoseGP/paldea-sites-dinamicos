@@ -15,7 +15,7 @@ O projeto Paldea representa a presenca digital de uma loja de plantas ornamentai
 ## Arquitetura atual
 
 - `LoginController`: recebe o acesso da equipe e redireciona para a vitrine
-- `ShowcaseController`: entrega as paginas de ofertas e catalogo
+- `ShowcaseController`: entrega o catalogo com comportamento condicional de campanha
 - `PlantController`: concentra as operacoes de cadastro, busca, atualizacao e exclusao
 - `PlantService`: aplica regras simples de negocio e validacao
 - `PlantRepository`: mantem os registros em memoria
@@ -25,8 +25,7 @@ O projeto Paldea representa a presenca digital de uma loja de plantas ornamentai
 
 - `GET /login`: abre a tela inicial de acesso
 - `POST /login`: valida as credenciais da equipe
-- `GET /ofertas`: mostra a vitrine com comportamento condicional para a campanha
-- `GET /catalogo`: exibe a colecao com repeticao de itens na view
+- `GET /catalogo`: exibe a colecao com repeticao de itens e comportamento condicional para a campanha
 - `GET /plantas`: abre a central administrativa
 - `POST /plantas/inserir`: cria um novo cadastro
 - `POST /plantas/atualizar`: altera um cadastro existente

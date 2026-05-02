@@ -11,15 +11,14 @@
     
     <header class="navbar">
         <div class="container nav-container">
-            <a class="brand" th:href="@{/ofertas}">
+            <a class="brand" th:href="@{/catalogo}">
                 <span>Paldea</span>
                 <small style="color: var(--text-muted); font-weight: 400; font-size: 0.8rem; text-transform: uppercase;">Botanica Contemporanea</small>
             </a>
             <nav class="nav-links">
-                <a class="nav-item" th:href="@{/ofertas}">Ofertas</a>
                 <a class="nav-item" th:href="@{/catalogo}">Catalogo</a>
                 <a class="nav-item active" th:href="@{/plantas}">Gestao</a>
-                <a class="btn btn-primary" th:href="@{/login}" style="padding: 0.5rem 1.25rem; margin-left: 1rem;">Acesso</a>
+                <span class="nav-item" th:if="${usuario}" th:text="${usuario}">Equipe</span>
             </nav>
         </div>
     </header>

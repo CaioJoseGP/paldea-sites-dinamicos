@@ -1,6 +1,7 @@
 package com.jardim.paldea.controller;
 
 import com.jardim.paldea.model.PlantCatalog;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,21 +16,22 @@ public class ShowcaseController {
         this.plantCatalog = plantCatalog;
     }
 
-    @GetMapping("/ofertas")
-    public ModelAndView showOffers(@RequestParam(defaultValue = "ativa") String promocaoStatus) {
+    @GetMapping("/catalogo")
+    public ModelAndView showCatalog(@RequestParam(defaultValue = "ativa") String promocaoStatus, HttpSession session) {
         boolean promotionActive = !"inativa".equalsIgnoreCase(promocaoStatus);
 
-        ModelAndView modelAndView = new ModelAndView("ofertas");
+        ModelAndView modelAndView = new ModelAndView("catalogo");
         modelAndView.addObject("promocaoAtiva", promotionActive);
         modelAndView.addObject("promocaoStatus", promotionActive ? "ativa" : "inativa");
-        modelAndView.addObject("destaques", plantCatalog.findHighlightedPlants());
+        modelAndView.addObject("plants", plantCatalog.findAll());
+        addSessionUser(modelAndView, session);
         return modelAndView;
     }
 
-    @GetMapping("/catalogo")
-    public ModelAndView showCatalog() {
-        ModelAndView modelAndView = new ModelAndView("catalogo");
-        modelAndView.addObject("plants", plantCatalog.findAll());
-        return modelAndView;
+    private void addSessionUser(ModelAndView modelAndView, HttpSession session) {
+        Object user = session.getAttribute("usuario");
+        if (user != null) {
+            modelAndView.addObject("usuario", user);
+        }
     }
 }

@@ -11,20 +11,25 @@
     
     <header class="navbar">
         <div class="container nav-container">
-            <a class="brand" th:href="@{/ofertas}">
+            <a class="brand" th:href="@{/catalogo}">
                 <span>Paldea</span>
                 <small style="color: var(--text-muted); font-weight: 400; font-size: 0.8rem; text-transform: uppercase;">Botanica Contemporanea</small>
             </a>
             <nav class="nav-links">
-                <a class="nav-item" th:href="@{/ofertas}">Ofertas</a>
                 <a class="nav-item active" th:href="@{/catalogo}">Catalogo</a>
                 <a class="nav-item" th:href="@{/plantas}">Gestao</a>
-                <a class="btn btn-primary" th:href="@{/login}" style="padding: 0.5rem 1.25rem; margin-left: 1rem;">Acesso</a>
+                <span class="nav-item" th:if="${usuario}" th:text="${usuario}">Equipe</span>
             </nav>
         </div>
     </header>
 
     <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+
+        <div class="alert alert-success" th:if="${feedbackMessage}" style="margin-bottom: 2rem;">
+            <strong th:text="'HTTP ' + ${feedbackStatus}">HTTP 200</strong>
+            <span th:text="${feedbackTitle}">Acesso liberado</span>
+            <span style="font-size: 0.8rem;" th:text="${feedbackMessage}">Mensagem de retorno.</span>
+        </div>
         
         <section class="grid-2" style="margin-bottom: 4rem;">
             <div style="display: flex; flex-direction: column; justify-content: center;">
@@ -44,6 +49,48 @@
                     <strong style="display: block; font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1; margin: 0.5rem 0;" th:text="${plants.size()}">6</strong>
                     <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Um inventario selecionado a dedo, oferecendo leitura clara para a equipe e destaque comercial refinado.</p>
                 </div>
+
+                <div class="glass-panel">
+                    <h3 style="margin-bottom: 0.5rem;">Status da Campanha</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Altere a exibicao da vitrine para visualizar o comportamento da oferta ativa.</p>
+
+                    <form th:action="@{/catalogo}" method="get">
+                        <div class="form-group">
+                            <select id="promocaoStatus" name="promocaoStatus" class="form-control">
+                                <option value="ativa" th:selected="${promocaoStatus == 'ativa'}">Campanha Promocional Ativa</option>
+                                <option value="inativa" th:selected="${promocaoStatus == 'inativa'}">Campanha Regular Inativa</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary btn-block" type="submit">Atualizar Vitrine</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Entrega 1 - uso de if: o destaque abaixo muda conforme o status da promocao enviado pelo servidor. -->
+        <section style="margin-bottom: 4rem;">
+            <div th:if="${promocaoAtiva}" class="glass-panel" style="background: linear-gradient(135deg, rgba(0, 210, 135, 0.1), rgba(0,0,0,0.4)); border-color: rgba(0, 210, 135, 0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <span class="badge">Oferta Ativa Especial</span>
+                    <strong style="color: var(--primary); font-size: 1.5rem;">20% OFF</strong>
+                </div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Suculentas com composicoes pensadas para casa e presentes.</h2>
+                <p style="color: var(--text-muted); line-height: 1.6; max-width: 800px; margin-bottom: 2rem;">
+                    Quando a campanha esta ativa, a vitrine evidencia o valor promocional e chama a atencao para uma colecao com alta procura e baixa manutencao.
+                </p>
+                <a class="btn btn-primary" th:href="@{/catalogo}">Ver colecao em oferta</a>
+            </div>
+
+            <div th:unless="${promocaoAtiva}" class="glass-panel" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0,0,0,0.4)); border-color: rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <span class="badge" style="background: rgba(255,255,255,0.1); color: var(--text-main);">Selecao Regular</span>
+                    <strong style="color: var(--text-muted); font-size: 1.2rem; text-transform: uppercase;">Curadoria Fixa</strong>
+                </div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">A vitrine retorna para a apresentacao principal da loja.</h2>
+                <p style="color: var(--text-muted); line-height: 1.6; max-width: 800px; margin-bottom: 2rem;">
+                    Sem campanha promocional, o destaque volta para a curadoria fixa da estacao, com foco em composicao, textura e atmosfera sofisticada.
+                </p>
+                <a class="btn btn-secondary" th:href="@{/catalogo}">Explorar a curadoria</a>
             </div>
         </section>
 

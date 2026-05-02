@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -29,6 +32,28 @@ class PaldeaApplicationTests {
 						.param("email", "equipe@paldea.com")
 						.param("senha", ""))
 				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	@DisplayName("Salva o usuario na sessao quando o login e valido")
+	void validLoginStoresUserInSession() throws Exception {
+		mockMvc.perform(post("/login")
+				.param("email", "equipe@paldea.com")
+				.param("senha", "paldea123"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/catalogo"))
+				.andExpect(request().sessionAttribute("usuario", "Equipe"));
+	}
+
+	@Test
+	@DisplayName("Redireciona o usuario logado que tenta abrir o login novamente")
+	void loggedUserOpeningLoginIsRedirected() throws Exception {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("usuario", "Equipe");
+
+		mockMvc.perform(get("/login").session(session))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/catalogo"));
 	}
 
 	@Test
