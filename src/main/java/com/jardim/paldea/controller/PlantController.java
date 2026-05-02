@@ -1,80 +1,112 @@
 package com.jardim.paldea.controller;
 
 import com.jardim.paldea.model.Plant;
+import com.jardim.paldea.model.PlantCatalog;
 import com.jardim.paldea.model.PlantForm;
-import com.jardim.paldea.service.PlantService;
-import com.jardim.paldea.service.ServiceResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/plantas")
 public class PlantController {
 
-    private final PlantService plantService;
+    private final PlantCatalog plantCatalog;
 
-    public PlantController(PlantService plantService) {
-        this.plantService = plantService;
+    public PlantController(PlantCatalog plantCatalog) {
+        this.plantCatalog = plantCatalog;
     }
 
-    @GetMapping
+    @GetMapping("/plantas")
     public ModelAndView showCrudPage() {
         return buildCrudPage(HttpStatus.OK, "Painel carregado", "Gerencie o catalogo da Paldea a partir dos formularios abaixo.",
                 new PlantForm(), "", "", null);
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/plantas/buscar")
     public ModelAndView search(@RequestParam(defaultValue = "") String id) {
-        ServiceResult<Plant> result = plantService.findById(id);
-        HttpStatus status = toHttpStatus(result);
-        String title = status == HttpStatus.OK ? "Planta localizada" : "Busca nao concluida";
-        return buildCrudPage(status, title, result.message(), new PlantForm(), id, "", result.data());
+        long plantId = PlantForm.parseId(id);
+        if (plantId == 0L) {
+            return buildCrudPage(HttpStatus.BAD_REQUEST, "Busca nao concluida",
+                    "Informe um identificador numerico para buscar uma planta.", new PlantForm(), id, "", null);
+        }
+
+        Plant plant = plantCatalog.findById(plantId);
+        if (plant == null) {
+            return buildCrudPage(HttpStatus.NOT_FOUND, "Busca nao concluida",
+                    "Nenhum cadastro foi encontrado para o ID " + plantId + ".", new PlantForm(), id, "", null);
+        }
+
+        return buildCrudPage(HttpStatus.OK, "Planta localizada",
+                "A planta " + plant.getNome() + " foi localizada com sucesso.", new PlantForm(), id, "", plant);
     }
 
-    @PostMapping("/inserir")
+    @PostMapping("/plantas/inserir")
     public ModelAndView create(@ModelAttribute PlantForm plantForm) {
-        ServiceResult<Plant> result = plantService.create(plantForm);
-        HttpStatus status = toHttpStatus(result);
-        String title = status == HttpStatus.OK ? "Cadastro realizado" : "Cadastro nao concluido";
-        return buildCrudPage(status, title, result.message(), new PlantForm(), "", "", result.data());
+        String validationMessage = plantForm.validatePlantData();
+        if (validationMessage != null) {
+            return buildCrudPage(HttpStatus.BAD_REQUEST, "Cadastro nao concluido", validationMessage,
+                    new PlantForm(), "", "", null);
+        }
+
+        Plant plant = plantCatalog.create(plantForm);
+        return buildCrudPage(HttpStatus.OK, "Cadastro realizado",
+                "A planta " + plant.getNome() + " foi cadastrada com o ID " + plant.getId() + ".",
+                new PlantForm(), "", "", plant);
     }
 
-    @PostMapping("/atualizar")
+    @PostMapping("/plantas/atualizar")
     public ModelAndView update(@ModelAttribute PlantForm plantForm) {
-        ServiceResult<Plant> result = plantService.update(plantForm);
-        HttpStatus status = toHttpStatus(result);
-        String title = status == HttpStatus.OK ? "Atualizacao concluida" : "Atualizacao nao concluida";
-        return buildCrudPage(status, title, result.message(), plantForm, "", "", result.data());
+        long plantId = plantForm.idAsLong();
+        if (plantId == 0L) {
+            return buildCrudPage(HttpStatus.BAD_REQUEST, "Atualizacao nao concluida",
+                    "Informe um ID valido para atualizar um cadastro existente.", plantForm, "", "", null);
+        }
+
+        String validationMessage = plantForm.validatePlantData();
+        if (validationMessage != null) {
+            return buildCrudPage(HttpStatus.BAD_REQUEST, "Atualizacao nao concluida", validationMessage,
+                    plantForm, "", "", null);
+        }
+
+        Plant plant = plantCatalog.update(plantId, plantForm);
+        if (plant == null) {
+            return buildCrudPage(HttpStatus.NOT_FOUND, "Atualizacao nao concluida",
+                    "Nao existe planta cadastrada com o ID " + plantId + " para atualizacao.",
+                    plantForm, "", "", null);
+        }
+
+        return buildCrudPage(HttpStatus.OK, "Atualizacao concluida",
+                "O cadastro da planta " + plant.getNome() + " foi atualizado.", plantForm, "", "", plant);
     }
 
-    @PostMapping("/apagar")
+    @PostMapping("/plantas/apagar")
     public ModelAndView delete(@RequestParam(defaultValue = "") String id) {
-        ServiceResult<Void> result = plantService.delete(id);
-        HttpStatus status = toHttpStatus(result);
-        String title = status == HttpStatus.OK ? "Cadastro removido" : "Exclusao nao concluida";
-        return buildCrudPage(status, title, result.message(), new PlantForm(), "", id, null);
-    }
+        long plantId = PlantForm.parseId(id);
+        if (plantId == 0L) {
+            return buildCrudPage(HttpStatus.BAD_REQUEST, "Exclusao nao concluida",
+                    "Informe um ID valido para remover um cadastro.", new PlantForm(), "", id, null);
+        }
 
-    // Entrega 2 - uso de erros HTTP: as regras de negocio convertem o retorno para 200, 400 ou 404 via Spring MVC.
-    private HttpStatus toHttpStatus(ServiceResult<?> result) {
-        return switch (result.type()) {
-            case SUCCESS -> HttpStatus.OK;
-            case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
-            case NOT_FOUND -> HttpStatus.NOT_FOUND;
-        };
+        if (!plantCatalog.delete(plantId)) {
+            return buildCrudPage(HttpStatus.NOT_FOUND, "Exclusao nao concluida",
+                    "Nao existe planta cadastrada com o ID " + plantId + " para exclusao.",
+                    new PlantForm(), "", id, null);
+        }
+
+        return buildCrudPage(HttpStatus.OK, "Cadastro removido",
+                "O cadastro de ID " + plantId + " foi removido da vitrine administrativa.",
+                new PlantForm(), "", id, null);
     }
 
     private ModelAndView buildCrudPage(HttpStatus status, String title, String message, PlantForm plantForm,
                                        String searchId, String deleteId, Plant selectedPlant) {
-        List<Plant> plants = plantService.findAll();
+        List<Plant> plants = plantCatalog.findAll();
 
         ModelAndView modelAndView = new ModelAndView("plantas");
         modelAndView.setStatus(status);

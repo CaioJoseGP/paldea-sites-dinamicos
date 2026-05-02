@@ -39,9 +39,57 @@ class PaldeaApplicationTests {
 	}
 
 	@Test
+	@DisplayName("Retorna 400 quando a busca recebe ID invalido")
+	void searchInvalidIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(get("/plantas/buscar").param("id", "abc"))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	@DisplayName("Retorna 200 para o catalogo")
 	void catalogReturnsOk() throws Exception {
 		mockMvc.perform(get("/catalogo"))
 				.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("Retorna 200 ao cadastrar uma planta valida")
+	void createValidPlantReturnsOk() throws Exception {
+		mockMvc.perform(post("/plantas/inserir")
+						.param("nome", "Orquidea Teste")
+						.param("categoria", "Flores")
+						.param("descricao", "Flor criada para validar o cadastro.")
+						.param("preco", "39,90"))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("Retorna 400 quando o preco do cadastro e invalido")
+	void createInvalidPriceReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/plantas/inserir")
+						.param("nome", "Orquidea Teste")
+						.param("categoria", "Flores")
+						.param("descricao", "Flor criada para validar o cadastro.")
+						.param("preco", "valor-invalido"))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	@DisplayName("Retorna 404 ao atualizar planta inexistente")
+	void updateMissingPlantReturnsNotFound() throws Exception {
+		mockMvc.perform(post("/plantas/atualizar")
+						.param("id", "999")
+						.param("nome", "Orquidea Teste")
+						.param("categoria", "Flores")
+						.param("descricao", "Flor criada para validar a atualizacao.")
+						.param("preco", "39,90"))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	@DisplayName("Retorna 404 ao apagar planta inexistente")
+	void deleteMissingPlantReturnsNotFound() throws Exception {
+		mockMvc.perform(post("/plantas/apagar").param("id", "999"))
+				.andExpect(status().isNotFound());
 	}
 }
